@@ -1,0 +1,67 @@
+import requests
+
+# Define proxy details
+proxies = {
+    "http": "http://127.0.0.1:8888",
+    "https": "https://127.0.0.1:8888"
+}
+
+# Set up a session with the proxy
+s = requests.Session()
+s.proxies = proxies
+
+# Define login parameters
+payload = {
+    "username": "admin",
+    "password": "password",
+    "login": "Login",
+    "user_token": "953d53ac43e77219126897ef22776a26"
+}
+
+# Define cookies to be included
+cookies = {
+    "PHPSESSID": "rcafp0kpt1bfi1tjbtbkmckb13",
+    "security": "low"
+}
+
+headers = {
+    "Cache-Control": "max-age=0",
+    "Upgrade-Insecure-Requests": "1",
+    "Origin": "http://192.168.149.128:8080",
+    "Referer": "http://192.168.149.128:8080/login.php",
+    "Accept-Encoding": "gzip, deflate",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Connection": "close"
+}
+
+payload2 = {
+    "username": "admin",
+    "password": "password",
+    "Login": "Login"
+}
+
+headers2 = {
+    "Upgrade-Insecure-Requests": "1",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "Referer": "http://192.168.149.128:8080/vulnerabilities/brute/",
+    "Accept-Encoding": "gzip, deflate",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Connection": "close"
+}
+
+# Send a POST request to the login page with the login parameters
+login_url = "http://192.168.149.128:8080/login.php"
+s.post(login_url, headers=headers, cookies=cookies, data=payload)
+
+# Make requests to other pages with the session maintained
+#other_url = "http://192.168.149.128:8080/vulnerabilities/brute/"
+#request = session.get(other_url)
+next_url = 'http://192.168.149.128:8080/vulnerabilities/brute/'
+response = s.get(next_url, params=payload2, headers=headers2, cookies=cookies)
+
+# Use the response object to interact with the page
+# if response.url == next_url:
+if response.status_code == 200:
+    print("Login successful!")
+else:
+    print("Login failed.")
